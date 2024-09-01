@@ -3,47 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Summary</title>
-    <style>
-        body {
-            width: 350px;
-            padding: 10px;
-            font-family: Arial, sans-serif;
-        }
-        button {
-            margin-top: 10px;
-            padding: 5px 10px;
-        }
-        #summary, #answer {
-            margin-top: 10px;
-            border: 1px solid #ccc;
-            padding: 5px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        #question {
-            width: 100%;
-            margin-top: 10px;
-        }
-        .error {
-            color: red;
-            font-style: italic;
-        }
-        #apiKeyStatus {
-            margin-top: 10px;
-            font-style: italic;
-        }
-    </style>
+    <title>YouTube Summary Extension</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <h2>YouTube Summary</h2>
-    <div id="apiKeyStatus"></div>
-    <button id="summarizeBtn">Summarize Video</button>
-    <div id="summary"></div>
-    <input type="text" id="question" placeholder="Ask a question about the video">
-    <button id="askBtn">Ask</button>
-    <div id="answer"></div>
-    <button id="optionsBtn">Options</button>
+    <div class="container">
+        <header>
+            <h1>YouTube Summary</h1>
+            <div id="apiKeyStatus" class="api-status"></div>
+        </header>
+        
+        <main>
+            <section id="summarySection">
+                <button id="summarizeBtn" class="btn primary">Summarize Video</button>
+                <div id="summary" class="content-box"></div>
+            </section>
+            
+            <section id="questionSection">
+                <input type="text" id="question" placeholder="Ask a question about the video">
+                <button id="askBtn" class="btn secondary">Ask</button>
+                <div id="answer" class="content-box"></div>
+            </section>
+        </main>
+        
+        <footer>
+            <button id="optionsBtn" class="btn tertiary">Options</button>
+        </footer>
+    </div>
     <script src="popup.js"></script>
 </body>
 </html>

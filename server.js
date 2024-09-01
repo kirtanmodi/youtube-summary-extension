@@ -25,6 +25,9 @@ app.post("/summarize", async (req, res) => {
 
   try {
     console.log("Transcript length:", req.body.transcript.length);
+    if (req.body.transcript.length > 12000) {
+      return res.status(400).json({ error: "Transcript is too long" });
+    }
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -36,7 +39,6 @@ app.post("/summarize", async (req, res) => {
         { role: "user", content: `Please summarize the following transcript:\n\n${req.body.transcript}` },
       ],
       temperature: 0.1,
-      max_tokens: 250,
     });
 
     console.log("OpenAI API response received");
@@ -60,12 +62,12 @@ app.post("/ask", async (req, res) => {
     console.log("Summary length:", req.body.summary.length);
     console.log("Question:", req.body.question);
     const response = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: "gpt-4o",
       messages: [
-        { role: "system", content: "You are a helpful assistant." },
+        { role: "system", content: "You are a helpful assistant. Use markdown." },
         { role: "user", content: `Based on the following summary, ${req.body.summary}, ${req.body.question}` },
       ],
-      temperature: 0.5,
+      temperature: 0.1,
     });
 
     console.log("OpenAI API response received");
