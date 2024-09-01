@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "YouTube Summary Extension",
+  "version": "1.0",
+  "description": "Summarize YouTube videos and ask follow-up questions using GPT-4",
+  "permissions": ["activeTab", "storage", "tabs"],
+  "host_permissions": ["https://www.youtube.com/*", "http://localhost:3000/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "options_page": "options.html"
+}

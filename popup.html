@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Summary</title>
+    <style>
+        body {
+            width: 350px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            margin-top: 10px;
+            padding: 5px 10px;
+        }
+        #summary, #answer {
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        #question {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .error {
+            color: red;
+            font-style: italic;
+        }
+        #apiKeyStatus {
+            margin-top: 10px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h2>YouTube Summary</h2>
+    <div id="apiKeyStatus"></div>
+    <button id="summarizeBtn">Summarize Video</button>
+    <div id="summary"></div>
+    <input type="text" id="question" placeholder="Ask a question about the video">
+    <button id="askBtn">Ask</button>
+    <div id="answer"></div>
+    <button id="optionsBtn">Options</button>
+    <script src="popup.js"></script>
+</body>
+</html>
