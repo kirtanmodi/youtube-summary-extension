@@ -29,7 +29,51 @@ function initializePopup() {
 
 // Function to display messages in the UI
 function displayMessage(element, message, type = MessageType.INFO) {
-  element.innerHTML = `<p class="${type}">${message}</p>`;
+  element.innerHTML = `<p class="${type}">${escapeHtml(message)}</p>`;
+}
+
+// Function to escape HTML special characters
+function escapeHtml(unsafe) {
+  return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+// Simple markdown to HTML converter
+function renderMarkdown(markdown) {
+  // Convert headers
+  markdown = markdown.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+  markdown = markdown.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+  markdown = markdown.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+  // Convert bold and italic
+  markdown = markdown.replace(/\*\*(.*)\*\*/gim, "<strong>$1</strong>");
+  markdown = markdown.replace(/\*(.*)\*/gim, "<em>$1</em>");
+
+  // Convert links
+  markdown = markdown.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+  // Convert unordered lists
+  markdown = markdown.replace(/^\s*\*\s(.+)/gim, "<ul><li>$1</li></ul>");
+  markdown = markdown.replace(/<\/ul>\s*<ul>/g, "");
+
+  // Convert ordered lists
+  markdown = markdown.replace(/^\s*\d+\.\s(.+)/gim, "<ol><li>$1</li></ol>");
+  markdown = markdown.replace(/<\/ol>\s*<ol>/g, "");
+
+  // Convert code blocks
+  markdown = markdown.replace(/```([\s\S]*?)```/g, "<pre><code>$1</code></pre>");
+
+  // Convert inline code
+  markdown = markdown.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // Convert paragraphs
+  markdown = markdown.replace(/^\s*(\n)?(.+)/gim, function (m) {
+    return /\<(\/)?(h\d|ul|ol|li|blockquote|pre|img)/.test(m) ? m : "<p>" + m + "</p>";
+  });
+
+  // Remove empty paragraphs
+  markdown = markdown.replace(/<p><\/p>/g, "");
+
+  return markdown;
 }
 
 // Function to get the current active tab
@@ -79,7 +123,7 @@ async function handleSummarize() {
     const response = await chrome.runtime.sendMessage({ action: "getSummary", url: tab.url });
 
     if (response && response.summary) {
-      ELEMENTS.summaryDiv.innerHTML = response.summary;
+      ELEMENTS.summaryDiv.innerHTML = renderMarkdown(response.summary);
       await storeSummary(response.summary);
     } else if (response && response.error) {
       throw new Error(response.error);
@@ -112,7 +156,7 @@ async function handleAskQuestion() {
     const response = await chrome.runtime.sendMessage({ action: "askQuestion", question: question });
 
     if (response && response.answer) {
-      ELEMENTS.answerDiv.textContent = response.answer;
+      ELEMENTS.answerDiv.innerHTML = renderMarkdown(response.answer);
     } else if (response && response.error) {
       throw new Error(response.error);
     } else {
@@ -153,7 +197,7 @@ async function loadStoredSummary() {
   try {
     const { lastSummary } = await chrome.storage.local.get("lastSummary");
     if (lastSummary) {
-      ELEMENTS.summaryDiv.innerHTML = lastSummary;
+      ELEMENTS.summaryDiv.innerHTML = renderMarkdown(lastSummary);
     }
   } catch (error) {
     console.error("Error loading stored summary:", error);

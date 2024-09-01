@@ -70,7 +70,7 @@ app.post("/ask", async (req, res) => {
       temperature: 0.1,
     });
 
-    console.log("OpenAI API response received");
+    console.log("OpenAI API response received", response.choices[0].message.content);
     res.json({ answer: response.choices[0].message.content });
   } catch (error) {
     console.error("Error in ask endpoint:", error);
