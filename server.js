@@ -64,7 +64,7 @@ app.post("/ask", async (req, res) => {
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
-        { role: "system", content: "You are a helpful assistant. Use markdown." },
+        { role: "system", content: "You are a helpful assistant. Respond in markdown." },
         { role: "user", content: `Based on the following summary, ${req.body.summary}, ${req.body.question}` },
       ],
       temperature: 0.1,
